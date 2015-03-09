@@ -29,9 +29,9 @@
      * Named function for easy (un)binding of events
      * @param {Event} e
      */
-    function listen(e)
+    function listen (e)
     {
-        Evt.prototype.instances[this].trigger(e);
+        Evt.prototype.instances[this].handle(e);
     }
 
     /**
@@ -166,7 +166,7 @@
         return this;
     };
 
-    Evt.prototype.trigger = function (e)
+    Evt.prototype.handle = function (e)
     {
         var event = e.type,
             node = e.target,
