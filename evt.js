@@ -143,7 +143,14 @@
 
         if (event && selector && !callback)
         {
-            delete this.events[event][selector];
+            if (typeof selector === "function")
+            {
+                this.off(event, undefined, selector);
+            }
+            else
+            {
+                delete this.events[event][selector];
+            }
 
             if (Object.keys(this.events[event]).length === 0)
             {
