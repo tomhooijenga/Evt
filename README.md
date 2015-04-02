@@ -1,5 +1,5 @@
 # Evt
-Javascript Event delegation
+Javascript Event delegation. Supposed to be better than [Gator](https://github.com/ccampbell/gator), because it has namespaces :sunglasses:. Weights about 2.3kb when minified and 930 bytes when gzipped.
 
 ## Api
 ``` js
@@ -15,6 +15,11 @@ evt === evt2 // true
 // Attach an event
 evt.on('click', function (e) {
   // Do stuff
+});
+
+// Attach a namespaced event
+evt.on('click.open', function (e) {
+  e.namespace === 'open' // true
 });
 
 // Attach a delegated event
@@ -35,6 +40,9 @@ evt.off();
 // Remove a specific event
 evt.off('click');
 
+// Remove all events with a matching namespace
+evt.off('.open');
+
 // Remove a specific handler for an event
 evt.off('click', func);
 
@@ -46,7 +54,4 @@ evt.off('click', 'a', func);
 ```
 ## Compatibility
 Evt should work in recent browsers (IE >= 9). It requires W3C Events (addEventHandler/removeEventHandler),
-as well as the following functions.
-* ``Node.matches``
-* ``Array.prototype.indexOf``
-* ``Object.keys``
+as well as ``Node.matches``
