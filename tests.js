@@ -14,10 +14,9 @@ QUnit.test("constructor - no new", function (assert)
 
 QUnit.test("cache", function (assert)
 {
-    var evt2 = new Evt("body");
+    var evt2 = Evt("body");
 
     assert.ok(evt === evt2, "Is same object");
-    assert.ok(Object.keys(Evt.prototype.instances).length === 1, "One entry in cache");
 });
 
 QUnit.test("add event", function (assert)
@@ -152,11 +151,11 @@ QUnit.test("stopPropagation; Evt handlers only", function (assert)
         click = document.createEvent("MouseEvents"),
         evt = new Evt("#propagation");
 
-    click.initEvent("click", true, true);
 
     evt.on("click", "#level2", clicker2);
     evt.on("click", "#level1", clicker1);
 
+    click.initEvent("click", true, true);
     document.querySelector("#level2").dispatchEvent(click);
 
     assert.ok(level1 === false, "Level 1 is not reached");
@@ -265,3 +264,4 @@ QUnit.test("namespaced; delegated trigger", function (assert)
 
     evt.off();
 });
+

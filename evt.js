@@ -26,15 +26,21 @@
      * @param {Event} e
      */
     function listen(e) {
-        Evt.prototype.instances[this].handle(e);
+        var instances = Evt.prototype.instances,
+            len = instances.length;
+
+        for (var i = 0; i < len; i++) {
+            if (instances[i].el === this) {
+                instances[i].handle(e);
+            }
+        }
     }
 
     /**
      * @param event
      * @returns {{type: (boolean|string), namespace: (boolean|Array.<string>), regex: (boolean|RegExp)}}
      */
-    function extract(event)
-    {
+    function extract(event) {
         event = (event || '').split(".");
 
         var type = event.shift(),
@@ -42,9 +48,9 @@
             regex = new RegExp(namespace.join(".*?\\."));
 
         return {
-            type: !!type && type,
+            type:      !!type && type,
             namespace: !!namespace.length && namespace.join("."),
-            regex: !!namespace.length && regex
+            regex:     !!namespace.length && regex
         };
     }
 
@@ -58,10 +64,14 @@
             return new Evt(selector);
         }
 
-        var el = selector instanceof Node ? selector : window.document.querySelector(selector);
+        var el = selector instanceof Node ? selector : window.document.querySelector(selector),
+            instances = this.instances,
+            len = instances.length;
 
-        if (this.instances[el]) {
-            return this.instances[el];
+        for (var i = 0; i < len; i++) {
+            if (instances[i].el === el) {
+                return instances[i];
+            }
         }
 
         /**
@@ -79,16 +89,15 @@
          */
         this.handlers = [];
 
-        this.instances[el] = this;
+        this.instances.push(this);
     };
 
 
-
     /**
-     * Holds the instances
-     * @type {Object.<Node, Evt>}
+     * Holds our instances
+     * @type {Array.<Evt>}
      */
-    Evt.prototype.instances = {};
+    Evt.prototype.instances = [];
 
     /**
      * Test whether a element matches a selector
@@ -220,8 +229,7 @@
 
             if (!this.matches(node, handler.selector)) return;
 
-            if (namespace && handler.namespace)
-            {
+            if (namespace && handler.namespace) {
                 if (!test.test(handler.namespace)) return;
             }
 
